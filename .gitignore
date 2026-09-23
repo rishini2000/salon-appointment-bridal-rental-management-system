@@ -1,0 +1,60 @@
+# ── macOS ──────────────────────────────────────────────
+.DS_Store
+*.DS_Store
+__MACOSX/
+# Windows (only matters if teammates use it)
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Gradle / build output ──────────────────────────────
+.gradle/
+build/
+out/
+*.class
+*.jar
+*.war
+
+# ── JVM runtime artifacts ──────────────────────────────
+hs_err_pid*
+replay_pid*
+
+# ── Logs ───────────────────────────────────────────────
+*.log
+logs/
+
+# ── IntelliJ IDEA ──────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ── VS Code ────────────────────────────────────────────
+.vscode/
+
+# ── Eclipse ────────────────────────────────────────────
+.factorypath
+.project
+.classpath
+.settings/
+
+# ── Editor swap files ──────────────────────────────────
+*.swp
+*.swo
+
+# ── Tooling caches ─────────────────────────────────────
+.ruff_cache/
+.hintrc
+
+# ── Project-specific ───────────────────────────────────
+*.zip
+
+# Environment and local configuration
+.env
+.env.*
+application-local.properties
+application-local.yml
+
+# Uploaded/runtime files
+uploads/

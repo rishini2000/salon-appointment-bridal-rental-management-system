@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{header :: headerFragment}"></head>
+
+<body>
+    <div class="app-layout">
+        <!-- Desktop Sidebar -->
+        <aside class="sidebar d-none d-lg-flex" th:replace="~{layout :: sidebarFragment}"></aside>
+
+        <!-- Mobile Offcanvas Sidebar -->
+        <div th:replace="~{layout :: sidebarOffcanvasFragment}"></div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <header th:replace="~{layout :: topbarFragment('Payment Management')}"></header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Page Title Card with Add Button -->
+                <div class="card mb-3">
+                    <div class="card-header title">
+                        <div class="row align-items-center">
+                            <div class="col text-start">
+                                <h2 class="table-title">Payment Management</h2>
+                            </div>
+                            <div class="col text-end header-actions" sec:authorize="hasAuthority('PAYMENT_INSERT')">
+                                <button type="button" class="btn my-custom-employee-button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#panelPaymentForm">
+                                    <i class="fa-solid fa-plus"></i> Add New Payment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="offcanvas offcanvas-end offcanvas-panel" id="panelPaymentForm" data-bs-backdrop="true">
+                    <div class="offcanvas-header">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h5 class="offcanvas-title mb-0">New Payment</h5>
+                            </div>
+                        </div>
+                        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    </div>
+
+                    <div class="offcanvas-body">
+                        <form id="formPayment" onsubmit="return false;">
+
+                            <h6 class="form-section-title">
+                                <i class="fa-solid fa-file-invoice-dollar me-2"></i> Payment Type
+                            </h6>
+
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold"> Payment For <span
+                                            class="text-danger">*</span></label>
+                                    <div class="d-flex gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentFor"
+                                                id="paymentAppointment" value="Appointment" checked>
+                                            <label class="form-check-label"> Appointment</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentFor"
+                                                id="paymentRental" value="Rental">
+                                            <label class="form-check-label">Rental</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <!-- Section: Appointment Selection -->
+                            <h6 class="form-section-title"><i class="fa-solid fa-calendar-check me-2"></i>Payment
+                                Details</h6>
+                            <div id="appointmentSection">
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label for="searchAppointment" class="form-label fw-bold">Appointment <span
+                                                class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i
+                                                    class="fa-solid fa-magnifying-glass"></i></span>
+                                            <input type="text" id="searchAppointment" class="form-control"
+                                                placeholder="Search by appointment no, customer name, or phone..."
+                                                list="listAppointment">
+                                            <datalist id="listAppointment"></datalist>
+                                            <input type="hidden" id="textAppointmentId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-bold">
+                                            Payment Type
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select id="selectAppointmentPaymentType" class="form-select">
+
+                                            <option value="">Select Payment Type</option>
+
+                                            <option value="FULL">Full Payment</option>
+
+                                            <option value="ADVANCE">Advance Payment</option>
+
+                                            <option value="REMAINING">Remaining Balance</option>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div id="rentalSection" style="display:none;">
+                                <label class="form-label fw-bold">Rental<span class="text-danger">*</span></label>
+
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                    <input type="text" id="searchRental" class="form-control"
+                                        placeholder="Search by rental no or customer name..." list="listRental">
+                                    <datalist id="listRental"></datalist><input type="hidden" id="textRentalId">
+                                </div>
+
+                                <div class="row mt-3">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-bold">
+                                            Payment Type
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select id="selectRentalPaymentType" class="form-select">
+
+                                            <option value="">Select Payment Type</option>
+
+                                            <option value="ADVANCE">Advance Payment</option>
+
+                                            <option value="KEY_MONEY">Key Money</option>
+
+                                            <option value="REMAINING">Remaining Balance</option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Customer Info (read-only, populated on appointment select) -->
+                            <div class="row g-3 mt-1" id="customerInfoSection" style="display: none;">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Customer Name</label>
+                                    <input type="text" id="textCustomerName" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Phone</label>
+                                    <input type="text" id="textCustomerPhone" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Appointment Date</label>
+                                    <input type="text" id="textAppointmentDate" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Section: Amount Summary -->
+                            <hr class="form-section-divider">
+                            <h6 class="form-section-title"><i class="fa-solid fa-credit-card me-2"></i>Amount Summary
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <div class="alert alert-info py-2 mb-0" id="paymentSummary" style="display: none;">
+                                        <small>
+                                            <i class="fa-solid fa-circle-info me-1"></i>
+                                            Total: <strong id="summaryTotal">Rs. 0</strong> |
+                                            Already Paid: <strong id="summaryPaid">Rs. 0</strong> |
+                                            Remaining: <strong class="text-danger" id="summaryRemaining">Rs. 0</strong>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="textAppointmentAmount" class="form-label fw-bold">Total Amount
+                                        <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text currency">Rs.</span>
+                                        <input type="number" min="0" id="textAppointmentAmount" required
+                                            placeholder="0.00" class="form-control input-element" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="textPayAmount" class="form-label fw-bold"> Payment Amount <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text currency">Rs.</span>
+                                        <input type="number" min="0" id="textPayAmount" required placeholder="0.00"
+                                            class="form-control input-element" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="textPayBalanceAmount" class="form-label fw-bold">Remaining Balance <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text currency">Rs.</span>
+                                        <input type="number" min="0" id="textPayBalanceAmount" required
+                                            placeholder="0.00" class="form-control input-element readonly-calculated"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="textKeyMoney" class="form-label fw-bold">Total Key Money <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text currency">Rs.</span>
+                                        <input type="number" id="textKeyMoney" class="form-control input-element"
+                                            step="0.01" min="0" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Payment Method -->
+                            <hr class="form-section-divider">
+                            <div class="inner-section-header">
+                                <h6 class="form-section-title"><i class="fa-solid fa-money-bill-wave me-2"></i> Payment
+                                    Methods</h6>
+                                <button type="button" class="btn btn-sm btn-primary" id="buttonAddPayment"
+                                    onclick="addPaymentMethod()"><i class="fa-solid fa-plus me-1"></i>Add</button>
+                            </div>
+                            <div class="inner-table-container">
+                                <div class="inner-controls">
+                                    <div class="row mb-2 mt-2 align-items-end">
+                                        <div class="col-md-5">
+                                            <label class="form-label fw-bold"> Payment Method</label>
+                                            <select id="selectPaymentMethod" class="form-select">
+                                                <option value="">Select Method</option>
+                                                <option value="Cash">Cash</option>
+                                                <option value="Card">Card</option>
+                                                <option value="Bank Transfer">Bank Transfer</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label class="form-label fw-bold"> Amount</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">Rs.</span>
+                                                <input type="number" id="textMethodAmount" class="form-control" min="0"
+                                                    placeholder="0.00">
+                                            </div>
+                                        </div>
+                                        <table class="modern-table mt-3">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Method</th>
+                                                    <th>Amount</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tableBodyPaymentMethod"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="panel-footer">
+                            <button type="button" id="buttonClear" class="btn-clear"
+                                onclick="document.getElementById('formPayment')?.reset()">Clear</button>
+                            <button type="button" id="buttonUpdate" class="btn-update" style="display:none;"
+                                onclick="buttonPaymentUpdate();">Update</button>
+                            <button type="button" id="buttonSubmit" class="btn-submit"
+                                onclick="buttonPaymentSubmit();">Submit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- start table area -->
+                <div class="row m-2">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="modern-table">
+                                    <thead>
+                                        <tr>
+                                            <th> No </th>
+                                            <th> Appointment </th>
+                                            <th> Customer </th>
+                                            <th>Payment Type</th>
+                                            <th> Appointment Amount </th>
+                                            <th> Total Paid </th>
+                                            <th> Remaining </th>
+                                            <th> Method </th>
+                                            <th> Note </th>
+                                            <th> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBodyPayment" class="tablebody">
+                                    </tbody>
+                                </table>
+
+                                <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-2">
+                                    <div id="countPayment" class="text-muted small"></div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="form-label mb-0 small text-muted">Rows per page</label>
+                                        <select id="pageSizePayment" class="form-select form-select-sm"
+                                            style="width:auto;">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div id="pagerPayment"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end table area -->
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{footer :: footerFragment}"></div>
+    <script src="/js/payment.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+<div th:fragment="footerFragment">
+    <!-- Bootstrap JS -->
+    <script src="/Resources/bootstrap-5.3.7/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="/Resources/script/jquery-3.7.1.min.js"></script>
+    <!-- Current user authorities (exposed by GlobalControllerAdvice) -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.userAuthorities = new Set(/*[[${currentUserAuthorities}]]*/ []);
+        /*]]>*/
+    </script>
+    <!-- Common JS -->
+    <script src="/Resources/script/common.js"></script>
+</div>
