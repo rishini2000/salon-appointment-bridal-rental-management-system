@@ -314,8 +314,13 @@ Log in using an authorized account.
 
 ## 📸 Screenshots
 
-Screenshots of the dashboard, appointment management, bridal rental management, payment management, and other modules will be added here.
+## 📸 Screenshots
 
+### Dashboard
+
+The dashboard provides an overview of salon operations, including employees, customers, appointments, services, bridal rental management, and rental processes.
+
+![Salon DEEN Dashboard](screenshots/dashboard.png)
 ---
 
 ## 📚 Project Documentation
